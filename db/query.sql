@@ -1,34 +1,34 @@
 \c employee_tracker_db;
 
-/* View All Departments table */
+-- View All Departments table
 SELECT
-    *
+*
 FROM department;
 
-/* View All Roles table */
+-- View All Roles table
 SELECT
-    role.id AS id,
-    title AS title,
+    role.id,
+    role.title,
     department.name AS department,
-    salary AS salary
+    role.salary,
 FROM role
-JOIN department
+LEFT JOIN department
     ON role.department_id = department.id
 
-/* View All Employees table */
+-- View All Employees table
 SELECT
-    employee.id AS id,
-    first_name AS first_name,
-    last_name AS last_name,
-    title AS title,
-    name AS department,
-    salary AS salary,
+    employee.id,
+    employee.first_name,
+    employee.last_name,
+    role.title,
+    department.name AS department,
+    role.salary,
     CONCAT(employee_manager.first_name, ' ', employee_manager.last_name) AS manager
 FROM employee
-JOIN role
+LEFT JOIN role
     ON employee.role_id = role.id
-JOIN department
+LEFT JOIN department
     ON role.department_id = department.id
-JOIN employee AS employee_manager
+LEFT JOIN employee employee_manager
     ON employee.manager_id = employee_manager.id
 
