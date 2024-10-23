@@ -1,24 +1,35 @@
 import client from "../config/connection.js";
 import 'console.table';
 
-export async function getAllEmployees() {
-    const sql = `
-    SELECT
-        employee.id,
-        employee.first_name,
-        employee.last_name,
-        role.title,
-        department.name AS department,
-        role.salary,
-        CONCAT(employee_manager.first_name, ' ', employee_manager.last_name) AS manager
-    FROM employee
-    LEFT JOIN role
-        ON employee.role_id = role.id
-    LEFT JOIN department
-        ON role.department_id = department.id
-    LEFT JOIN employee employee_manager
-        ON employee.manager_id = employee_manager.id
-    `;
+export async function getAllEmployees(basic: boolean) {
+    let sql;
+    if (basic) {
+        sql = `
+        SELECT
+            id,
+            CONCAT(first_name, ' ', last_name) AS full_name
+        FROM employee
+        `
+
+    } else {
+        sql = `
+        SELECT
+            employee.id,
+            employee.first_name,
+            employee.last_name,
+            role.title,
+            department.name AS department,
+            role.salary,
+            CONCAT(employee_manager.first_name, ' ', employee_manager.last_name) AS manager
+        FROM employee
+        LEFT JOIN role
+            ON employee.role_id = role.id
+        LEFT JOIN department
+            ON role.department_id = department.id
+        LEFT JOIN employee employee_manager
+            ON employee.manager_id = employee_manager.id
+        `
+    }
 
     const {rows} = await client.query(sql);
 

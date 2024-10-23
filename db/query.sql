@@ -32,3 +32,9 @@ LEFT JOIN department
 LEFT JOIN employee employee_manager
     ON employee.manager_id = employee_manager.id
 
+
+-- View All Employees Basic
+SELECT
+    id,
+    CONCAT(first_name, ' ', last_name) AS full_name
+FROM employee
