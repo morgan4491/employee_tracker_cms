@@ -1,18 +1,14 @@
 import client from "../config/connection.js";
 import 'console.table';
-
-export async function getAllDepartments () {
+export async function getAllDepartments() {
     const sql = `
     SELECT
     *
     FROM department;
     `;
-
-    const {rows} = await client.query(sql);
-
+    const { rows } = await client.query(sql);
     return rows;
 }
-
 export async function getAllRoles() {
     const sql = `
     SELECT
@@ -24,13 +20,10 @@ export async function getAllRoles() {
     LEFT JOIN department
         ON role.department_id = department.id
     `;
-
-    const {rows} = await client.query(sql);
-
+    const { rows } = await client.query(sql);
     return rows;
 }
-
-export async function getAllEmployees(basic: boolean) {
+export async function getAllEmployees(basic) {
     let sql;
     if (basic) {
         sql = `
@@ -38,9 +31,9 @@ export async function getAllEmployees(basic: boolean) {
             id,
             CONCAT(first_name, ' ', last_name) AS full_name
         FROM employee
-        `
-
-    } else {
+        `;
+    }
+    else {
         sql = `
         SELECT
             employee.id,
@@ -57,46 +50,33 @@ export async function getAllEmployees(basic: boolean) {
             ON role.department_id = department.id
         LEFT JOIN employee employee_manager
             ON employee.manager_id = employee_manager.id
-        `
+        `;
     }
-
-    const {rows} = await client.query(sql);
-
+    const { rows } = await client.query(sql);
     return rows;
 }
-
-
-
-
-
-export async function addDepartment(name: string) {
+export async function addDepartment(name) {
     const sql = `
     INSERT INTO department (name) VALUES ($1)
     `;
-
     await client.query(sql, [name]);
 }
-
-export async function addRole(title: string, salary: number, department_id: number) {
+export async function addRole(title, salary, department_id) {
     const sql = `
     INSERT INTO role (title, salary, department_id) VALUES ($1, $2, $3)
     `;
-
     await client.query(sql, [title, salary, department_id]);
 }
-
-export async function addEmployee(first_name: string, last_name: string, role_id: number, manager_id: number) {
+export async function addEmployee(first_name, last_name, role_id, manager_id) {
     const sql = `
     INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ($1, $2, $3, $4)
     `;
-
     await client.query(sql, [first_name, last_name, role_id, manager_id]);
 }
-
-export async function updateEmployee(id: number, role_id: number) {
+export async function updateEmployee(id, role_id) {
     const sql = `
     UPDATE employee SET role_id = $1 WHERE id = $2
     `;
-
     await client.query(sql, [role_id, id]);
 }
+//# sourceMappingURL=query.js.map

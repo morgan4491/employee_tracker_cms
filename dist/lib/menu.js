@@ -1,11 +1,7 @@
 import inquirer from 'inquirer';
 import 'console.table';
-
 import { getAllEmployees, getAllRoles, getAllDepartments, updateEmployee, addDepartment, addRole, addEmployee } from './query.js';
-
 let showWelcome = false;
-
-
 export async function updateEmployeeId() {
     const employeeArray = await getAllEmployees(true);
     const rolesArray = await getAllRoles();
@@ -18,7 +14,7 @@ export async function updateEmployeeId() {
                 return {
                     name: userObj.full_name,
                     value: userObj.id
-                }
+                };
             })
         },
         {
@@ -29,30 +25,29 @@ export async function updateEmployeeId() {
                 return {
                     name: roleObj.title,
                     value: roleObj.id
-                }
+                };
             })
         },
     ]);
-
     await updateEmployee(id, role_id);
     console.log('\nEmployee updated successfully!\n');
-};
-
+}
+;
 export async function showAllEmployees() {
     const employeesArray = await getAllEmployees(false);
     console.table(employeesArray);
-};
-
+}
+;
 export async function showAllRoles() {
     const rolesArray = await getAllRoles();
     console.table(rolesArray);
-};
-
+}
+;
 export async function showAllDepartments() {
     const departmentsArray = await getAllDepartments();
     console.table(departmentsArray);
-};
-
+}
+;
 export async function showAddDepartment() {
     const departmentsArray = await getAllDepartments();
     const { addNewDepartment } = await inquirer.prompt({
@@ -60,16 +55,13 @@ export async function showAddDepartment() {
         name: 'addNewDepartment',
         type: 'input'
     });
-
-
     if (addNewDepartment) {
         departmentsArray.push(addNewDepartment);
         await addDepartment(addNewDepartment);
         console.log('\nDepartment added successfully!\n');
     }
-
-};
-
+}
+;
 export async function showAddRole() {
     try {
         const rolesArray = await getAllRoles();
@@ -90,18 +82,17 @@ export async function showAddRole() {
                 type: 'input'
             },
         ]);
-
         if (newRoleName && newRoleSalary && newRoleId) {
             rolesArray.push(newRoleName, newRoleSalary, newRoleId);
             await addRole(newRoleName, newRoleSalary, newRoleId);
             console.log('\nRole added successfully!\n');
         }
-    } catch (error) {
+    }
+    catch (error) {
         console.error('An error occurred:', error);
     }
-
-};
-
+}
+;
 export async function showAddEmployee() {
     const employeesArray = await getAllEmployees(true);
     const { firstName, lastName, roleId, managerId } = await inquirer.prompt([
@@ -126,22 +117,18 @@ export async function showAddEmployee() {
             type: 'input'
         }
     ]);
-
-    
     if (firstName && lastName && roleId && managerId) {
         employeesArray.push(firstName, lastName, roleId, managerId);
         await addEmployee(firstName, lastName, roleId, managerId);
         console.log('\nEmployee added successfully!\n');
     }
-
-};
-
+}
+;
 export async function showMainMenu() {
     if (!showWelcome) {
         console.log('\nWelcome to the Employee Tracker\n');
         showWelcome = true;
     }
-
     const { optionFunction } = await inquirer.prompt({
         message: 'Please select an option',
         name: 'optionFunction',
@@ -181,13 +168,11 @@ export async function showMainMenu() {
             }
         ]
     });
-
     if (!optionFunction) {
         console.log('\nThanks for using the Employee Tracker!\n');
         process.exit();
     }
-
     await optionFunction();
-
     showMainMenu();
 }
+//# sourceMappingURL=menu.js.map
