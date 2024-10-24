@@ -73,27 +73,27 @@ export async function showAddDepartment() {
 export async function showAddRole() {
     try {
         const rolesArray = await getAllRoles();
-        const { newRoleName, newRoleSalary, newRoleId } = await inquirer.prompt([
+        const { title, salary, departmentId } = await inquirer.prompt([
             {
-                message: 'Please type the name of the department you would like to add',
-                name: 'newRoleName',
+                message: 'Please type the name of the role you would like to add',
+                name: 'title',
                 type: 'input'
             },
             {
                 message: 'Please enter the salary',
-                name: 'newRoleSalary',
+                name: 'salary',
                 type: 'input'
             },
             {
                 message: 'Please enter the department id',
-                name: 'newRoleId',
+                name: 'departmentId',
                 type: 'input'
             },
         ]);
 
-        if (newRoleName && newRoleSalary && newRoleId) {
-            rolesArray.push(newRoleName, newRoleSalary, newRoleId);
-            await addRole(newRoleName, newRoleSalary, newRoleId);
+        if (title && salary && departmentId) {
+            rolesArray.push(title, salary, departmentId);
+            await addRole(title, salary, departmentId);
             console.log('\nRole added successfully!\n');
         }
     } catch (error) {
