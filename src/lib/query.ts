@@ -65,7 +65,23 @@ export async function getAllEmployees(basic: boolean) {
     return rows;
 }
 
-export async function getEmployeeManager() {
+export async function getAllManagers() {
+    const sql = `
+    SELECT DISTINCT
+        employee_manager.id,
+        employee_manager.first_name,
+        employee_manager.last_name
+    FROM employee
+    INNER JOIN employee employee_manager
+        ON employee.manager_id = employee_manager.id
+    `;
+
+    const {rows} = await client.query(sql);
+
+    return rows;
+}
+
+export async function getEmployeeManager(manager_id: number) {
     const sql = `
     SELECT
         employee.manager_id,
@@ -74,9 +90,28 @@ export async function getEmployeeManager() {
     FROM employee
     JOIN employee employee_manager
         ON employee.manager_id = employee_manager.id
+    WHERE employee.manager_id = $1
     `;
 
-    const {rows} = await client.query(sql);
+    const {rows} = await client.query(sql, [manager_id]);
+
+    return rows;
+}
+
+export async function getEmployeeDept(department_id: number) {
+    const sql = `
+    SELECT
+        employee.id,
+        CONCAT(employee.first_name, ' ', employee.last_name) AS     employee_name
+    FROM employee
+    JOIN role
+        ON employee.role_id = role.id
+    JOIN department
+        ON role.department_id = department.id
+    WHERE role.department_id = $1
+    `;
+
+    const {rows} = await client.query(sql, [department_id]);
 
     return rows;
 }
@@ -113,4 +148,12 @@ export async function updateEmployee(id: number, role_id: number) {
     `;
 
     await client.query(sql, [role_id, id]);
+}
+
+export async function updateEmpManager(id: number, manager_id: number) {
+    const sql = `
+    UPDATE employee SET manager_id = $2 WHERE id = $1
+    `;
+
+    await client.query(sql, [id, manager_id]);
 }

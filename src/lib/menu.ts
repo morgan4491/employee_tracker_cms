@@ -1,7 +1,7 @@
 import inquirer from 'inquirer';
 import 'console.table';
 
-import { getAllEmployees, getAllRoles, getAllDepartments, updateEmployee, addDepartment, addRole, addEmployee, getEmployeeManager } from './query.js';
+import { getAllEmployees, getAllRoles, getAllDepartments, updateEmployee, addDepartment, addRole, addEmployee, getEmployeeManager, getAllManagers, getEmployeeDept, updateEmpManager } from './query.js';
 
 let showWelcome = false;
 
@@ -38,15 +38,78 @@ export async function updateEmployeeId() {
     console.log('\nEmployee updated successfully!\n');
 };
 
+export async function updateEmployeeManager() {
+    const employeeArray = await getAllEmployees(true);
+    const managerArray = await getAllManagers();
+    const { id, manager_id} = await inquirer.prompt([
+        {
+            message: 'Please select an employee to update',
+            name: 'id',
+            type: 'list',
+            choices: employeeArray.map((userObj) => {
+                return {
+                    name: userObj.full_name,
+                    value: userObj.id
+                }
+            })
+        },
+        {
+            message: 'Please select a new manager for the employee',
+            name: 'manager_id',
+            type: 'list',
+            choices: managerArray.map((userObj) => {
+                return {
+                    name: userObj.first_name + ' ' + userObj.last_name,
+                    value: userObj.id
+                }
+            })
+        }
+    ])
+
+    await updateEmpManager(id, manager_id);
+    console.log('\nEmployee manager updated successfully!\n');
+
+}
+
 export async function showAllEmployees() {
     const employeesArray = await getAllEmployees(false);
     console.table(employeesArray);
 };
 
 export async function showEmployeeManager() {
-    const managerArray = await getEmployeeManager();
-    // const employeeArray = await getAllEmployees(false);
-    console.table(managerArray);
+    const managerArray = await getAllManagers();
+    const {employeeByManager} = await inquirer.prompt({
+        message: 'Please select a manager to view their employee(s)',
+        name: 'employeeByManager',
+        type: 'list',
+        choices: managerArray.map((manObj) => {
+            return {
+                name: manObj.first_name + ' ' + manObj.last_name,
+                value: manObj.id
+            }
+        })
+    })
+
+    const byManager = await getEmployeeManager(employeeByManager);
+    console.table(byManager);
+};
+
+export async function showEmployeeDept() {
+    const deptArray = await getAllDepartments();
+    const {employeeByDept} = await inquirer.prompt({
+        message: 'Please select a department to view the employee(s)',
+        name: 'employeeByDept',
+        type: 'list',
+        choices: deptArray.map((deptObj) => {
+            return {
+                name: deptObj.name,
+                value: deptObj.id
+            }
+        })
+    })
+
+    const byDept = await getEmployeeDept(employeeByDept);
+    console.table(byDept);
 };
 
 export async function showAllRoles() {
@@ -182,8 +245,16 @@ export async function showMainMenu() {
                 value: showEmployeeManager
             },
             {
+                name: 'Show Employee By Department',
+                value: showEmployeeDept
+            },
+            {
                 name: 'Update An Employee Role',
                 value: updateEmployeeId
+            },
+            {
+                name: 'Update An Employee\'s Manager',
+                value: updateEmployeeManager
             },
             {
                 name: 'Quit',
