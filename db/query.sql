@@ -38,3 +38,21 @@ SELECT
     id,
     CONCAT(first_name, ' ', last_name) AS full_name
 FROM employee
+
+
+-- View employees by manager
+SELECT
+    employee.manager_id,
+    CONCAT(employee_manager.first_name, ' ', employee_manager.last_name) AS manager,
+    CONCAT(employee.first_name, ' ', employee.last_name) AS employee_name
+FROM employee
+JOIN employee employee_manager
+    ON employee.manager_id = employee_manager.id
+
+-- View employees by department
+
+-- Update employee managers
+
+-- Delete departments, roles, and employees
+
+-- View the total utilized budget by department

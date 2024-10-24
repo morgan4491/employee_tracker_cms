@@ -1,6 +1,6 @@
 import inquirer from 'inquirer';
 import 'console.table';
-import { getAllEmployees, getAllRoles, getAllDepartments, updateEmployee, addDepartment, addRole, addEmployee } from './query.js';
+import { getAllEmployees, getAllRoles, getAllDepartments, updateEmployee, addDepartment, addRole, addEmployee, getEmployeeManager } from './query.js';
 let showWelcome = false;
 export async function updateEmployeeId() {
     const employeeArray = await getAllEmployees(true);
@@ -36,6 +36,12 @@ export async function updateEmployeeId() {
 export async function showAllEmployees() {
     const employeesArray = await getAllEmployees(false);
     console.table(employeesArray);
+}
+;
+export async function showEmployeeManager() {
+    const managerArray = await getEmployeeManager();
+    // const employeeArray = await getAllEmployees(false);
+    console.table(managerArray);
 }
 ;
 export async function showAllRoles() {
@@ -157,6 +163,10 @@ export async function showMainMenu() {
             {
                 name: 'Add An Employee',
                 value: showAddEmployee
+            },
+            {
+                name: 'Show Employee By Manager',
+                value: showEmployeeManager
             },
             {
                 name: 'Update An Employee Role',

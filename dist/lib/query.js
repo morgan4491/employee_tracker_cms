@@ -55,6 +55,19 @@ export async function getAllEmployees(basic) {
     const { rows } = await client.query(sql);
     return rows;
 }
+export async function getEmployeeManager() {
+    const sql = `
+    SELECT
+        employee.manager_id,
+        CONCAT(employee_manager.first_name, ' ', employee_manager.last_name) AS     manager,
+        CONCAT(employee.first_name, ' ', employee.last_name) AS employee_name
+    FROM employee
+    JOIN employee employee_manager
+        ON employee.manager_id = employee_manager.id
+    `;
+    const { rows } = await client.query(sql);
+    return rows;
+}
 export async function addDepartment(name) {
     const sql = `
     INSERT INTO department (name) VALUES ($1)
