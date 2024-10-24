@@ -67,7 +67,7 @@ export async function showAddRole() {
         const rolesArray = await getAllRoles();
         const { title, salary, departmentId } = await inquirer.prompt([
             {
-                message: 'Please type the name of the department you would like to add',
+                message: 'Please type the name of the role you would like to add',
                 name: 'title',
                 type: 'input'
             },
