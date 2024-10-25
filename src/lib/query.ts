@@ -157,3 +157,19 @@ export async function updateEmpManager(id: number, manager_id: number) {
 
     await client.query(sql, [id, manager_id]);
 }
+
+export async function deleteDepartment(id: number) {
+    const sql = `
+    DELETE FROM department WHERE id = $1
+    `;
+
+    await client.query(sql, [id]);
+}
+
+export async function delRole(id: number) {
+    const sql = `
+    DELETE FROM role WHERE id = $1
+    `;
+
+    await client.query(sql, [id]);
+}

@@ -1,6 +1,6 @@
 import inquirer from 'inquirer';
 import 'console.table';
-import { getAllEmployees, getAllRoles, getAllDepartments, updateEmployee, addDepartment, addRole, addEmployee, getEmployeeManager, getAllManagers, getEmployeeDept, updateEmpManager } from './query.js';
+import { getAllEmployees, getAllRoles, getAllDepartments, updateEmployee, addDepartment, addRole, addEmployee, getEmployeeManager, getAllManagers, getEmployeeDept, updateEmpManager, deleteDepartment, delRole } from './query.js';
 let showWelcome = false;
 export async function updateEmployeeId() {
     const employeeArray = await getAllEmployees(true);
@@ -188,6 +188,38 @@ export async function showAddEmployee() {
     }
 }
 ;
+export async function deleteDept() {
+    const departmentsArray = await getAllDepartments();
+    const { id } = await inquirer.prompt({
+        message: 'Please select the department you would like to delete',
+        name: 'id',
+        type: 'list',
+        choices: departmentsArray.map((userObj) => {
+            return {
+                name: userObj.name,
+                value: userObj.id
+            };
+        })
+    });
+    await deleteDepartment(id);
+}
+;
+export async function deleteRole() {
+    const rolesArray = await getAllRoles();
+    const { id } = await inquirer.prompt({
+        message: 'Please select the role you would like to delete',
+        name: 'id',
+        type: 'list',
+        choices: rolesArray.map((userObj) => {
+            return {
+                name: userObj.title,
+                value: userObj.id
+            };
+        })
+    });
+    await delRole(id);
+}
+;
 export async function showMainMenu() {
     if (!showWelcome) {
         console.log('\nWelcome to the Employee Tracker\n');
@@ -237,6 +269,14 @@ export async function showMainMenu() {
             {
                 name: 'Update An Employee\'s Manager',
                 value: updateEmployeeManager
+            },
+            {
+                name: 'Delete A Department',
+                value: deleteDept
+            },
+            {
+                name: 'Delete A Role',
+                value: deleteRole
             },
             {
                 name: 'Quit',

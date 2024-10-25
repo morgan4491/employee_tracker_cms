@@ -127,4 +127,16 @@ export async function updateEmpManager(id, manager_id) {
     `;
     await client.query(sql, [id, manager_id]);
 }
+export async function deleteDepartment(id) {
+    const sql = `
+    DELETE FROM department WHERE id = $1
+    `;
+    await client.query(sql, [id]);
+}
+export async function delRole(id) {
+    const sql = `
+    DELETE FROM role WHERE id = $1
+    `;
+    await client.query(sql, [id]);
+}
 //# sourceMappingURL=query.js.map

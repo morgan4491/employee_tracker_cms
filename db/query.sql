@@ -79,7 +79,14 @@ JOIN department
 
 
 -- Delete departments, roles, and employees
+DELETE FROM employee
+WHERE id = $1
 
+DELETE FROM role
+WHERE id = $1
+
+DELETE FROM department
+WHERE id = $1
 
 
 -- View the total utilized budget by department
